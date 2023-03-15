@@ -6,7 +6,7 @@ import { prisma } from "~/server/db";
 
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
-import { verifyJwt } from "./auth";
+import { verifyJwt } from "./auth/service";
 
 export const createTRPCContext = (_opts: CreateNextContextOptions) => {
   const { req, res } = _opts;
@@ -32,7 +32,14 @@ const requireUserAuth = t.middleware(({ ctx, next }) => {
 
   const {req, res} = ctx;
 
-  const token = req.cookies.token;
+  let token;
+
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith('Bearer')
+  ) {
+    token = req.headers.authorization.split(' ')[1];
+  }
 
   if(!token){
     throw new TRPCError({code: "UNAUTHORIZED"});

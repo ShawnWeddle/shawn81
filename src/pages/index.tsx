@@ -2,6 +2,9 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 
+import SignUpForm from "~/components/SignIn/SignUpForm";
+import LogInForm from "~/components/SignIn/LogInForm";
+
 import { api } from "~/utils/api";
 
 const Home: NextPage = () => {
@@ -46,6 +49,8 @@ const Home: NextPage = () => {
           <p className="text-2xl text-white">
             {hello.data ? hello.data.greeting : "Loading tRPC query..."}
           </p>
+          <SignUpForm />
+          <LogInForm />
         </div>
       </main>
     </>
