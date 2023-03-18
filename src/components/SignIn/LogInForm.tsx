@@ -7,17 +7,27 @@ const LogInForm: React.FC = () => {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
 
-    logInUser.mutate({
-      username: username,
-      password: password,
-    });
+    logInUser.mutate(
+      {
+        username: username,
+        password: password,
+      },
+      {
+        onSuccess(data, variables, context) {
+          localStorage.setItem("token", data.token);
+          localStorage.setItem("userId", data.user.userId);
+          localStorage.setItem("username", data.user.username);
+        },
+      }
+    );
   };
 
-  const logInUser = api.session.logIn.useMutation();
+  const logInUser = api.user.logInUser.useMutation();
 
   return (
     <div className="flex justify-center">
@@ -63,6 +73,7 @@ const LogInForm: React.FC = () => {
         <div className="flex justify-center">
           <button
             type="submit"
+            disabled={logInUser.isLoading}
             className="mb-2 rounded-lg border-2 border-zinc-50 bg-zinc-800 p-1 text-lg text-zinc-50 hover:bg-gradient-to-br hover:from-zinc-800 hover:to-blue-800"
           >
             Log In

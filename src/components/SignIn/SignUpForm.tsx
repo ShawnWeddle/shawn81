@@ -11,23 +11,14 @@ const SignUpForm: React.FC = () => {
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
     console.log("Sign Up");
-    if (checkUser.data) {
-      console.log("User already exists");
-    } else {
-      console.log("You're good fam");
-      createUser.mutate({
-        username: username,
-        password: password,
-        passwordConfirmation: passwordConfirmation,
-      });
-    }
+    registerUser.mutate({
+      username: username,
+      password: password,
+      passwordConfirm: passwordConfirmation,
+    });
   };
 
-  const checkUser = api.user.getByUsername.useQuery({
-    username: username,
-  });
-
-  const createUser = api.user.create.useMutation();
+  const registerUser = api.user.registerUser.useMutation();
 
   return (
     <div className="flex justify-center">

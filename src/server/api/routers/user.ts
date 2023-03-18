@@ -10,6 +10,6 @@ export const userRouter = createTRPCRouter({
 
   logInUser: publicProcedure
   .input(loginUserSchema)
-  .mutation(({input}) => loginHandler({input}))
+  .mutation(({ input }) => loginHandler({ input }))
 }
 );

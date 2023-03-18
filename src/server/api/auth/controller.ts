@@ -1,7 +1,9 @@
 import bcrypt from "bcrypt";
-import { createUser, findUser, signJwt} from "./service.js";
-import type { CreateUserInput, LoginUserInput } from "./schema.js";
+import { createUser, findUser, signJwt} from "./service";
+import type { CreateUserInput, LoginUserInput } from "./schema";
 import { TRPCError } from "@trpc/server";
+import type { Context } from "../trpc";
+import type { User } from "@prisma/client";
 
 export const registerHandler = async ({
   input,
@@ -32,10 +34,8 @@ export const loginHandler = async ({
   input: LoginUserInput
 }) => {
   try {
-    // Get the user from the collection
     const user = await findUser({ username: input.username });
 
-    // Check if user exist and password is correct
     if (!user || !(await bcrypt.compare(input.password, user.password))) {
       throw new TRPCError({
         code: 'BAD_REQUEST',
@@ -43,12 +43,12 @@ export const loginHandler = async ({
       });
     }
 
-    const token = signJwt({...user}, { expiresIn: "1d" });
+    const token = signJwt({...user});
 
-    // Send Access Token
     return {
       status: 'success',
       token,
+      user: {username: user.username, userId: user.id}
     };
   } catch (err) {
     throw err;

@@ -1,10 +1,10 @@
 
 import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
-import type { NextApiRequest, NextApiResponse } from "next";
 
 import { prisma } from "~/server/db";
 
 import { initTRPC, TRPCError } from "@trpc/server";
+import type { inferAsyncReturnType } from "@trpc/server";
 import superjson from "superjson";
 import { verifyJwt } from "./auth/service";
 
@@ -15,7 +15,7 @@ export const createTRPCContext = (_opts: CreateNextContextOptions) => {
   });
 };
 
-
+export type Context = inferAsyncReturnType<typeof createTRPCContext>; 
 
 const t = initTRPC.context<typeof createTRPCContext>().create({
   transformer: superjson,
@@ -29,9 +29,7 @@ export const createTRPCRouter = t.router;
 export const publicProcedure = t.procedure;
 
 const requireUserAuth = t.middleware(({ ctx, next }) => {
-
-  const {req, res} = ctx;
-
+  const {req} = ctx;
   let token;
 
   if (
@@ -46,11 +44,14 @@ const requireUserAuth = t.middleware(({ ctx, next }) => {
   }
 
   const tokenIsVerified = verifyJwt(token);
-  console.log(tokenIsVerified);
+
+  if(!tokenIsVerified.valid){
+    throw new TRPCError({code: "UNAUTHORIZED"});
+  }
   
   return next({
     ctx: {
-      body: tokenIsVerified.decoded
+      token: tokenIsVerified.decoded
     }
   });
 });
