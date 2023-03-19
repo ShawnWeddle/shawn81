@@ -6,7 +6,7 @@ const MainGrid: React.FC = () => {
   const { postState, postDispatch } = usePostContext();
   const activePosts = postState.posts;
 
-  const getAllPosts = api.postRouter.getall.useQuery();
+  /*const getAllPosts = api.postRouter.getall.useQuery();*/
 
   const Cells = activePosts.map((post, index) => (
     <MainCell postProperties={post} key={index} />

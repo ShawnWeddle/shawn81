@@ -2,8 +2,6 @@ import bcrypt from "bcrypt";
 import { createUser, findUser, signJwt} from "./service";
 import type { CreateUserInput, LoginUserInput } from "./schema";
 import { TRPCError } from "@trpc/server";
-import type { Context } from "../trpc";
-import type { User } from "@prisma/client";
 
 export const registerHandler = async ({
   input,

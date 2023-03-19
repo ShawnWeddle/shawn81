@@ -2,9 +2,13 @@ import MainLogo from "./MainLogo";
 import SignUpButton from "./SignUpButton";
 import LogInButton from "./LogInButton";
 import LogOutButton from "./LogOutButton";
+import UsernameButton from "./UsernameButton";
+import { useAuthContext } from "~/hooks/useAuthContext";
 
 const NavBar: React.FC = () => {
-  const sessionData = false;
+  const { authState, authDispatch } = useAuthContext();
+  const user = authState.user;
+  const username = user ? user.username : "";
 
   return (
     <nav className="flex justify-between bg-zinc-700">
@@ -12,10 +16,10 @@ const NavBar: React.FC = () => {
         <MainLogo />
       </div>
       <div className="m-4 flex gap-4">
-        {!sessionData && <SignUpButton />}
-        {!sessionData && <LogInButton />}
-        {sessionData && <span>Username</span>}
-        {sessionData && <LogOutButton />}
+        {!user && <SignUpButton />}
+        {!user && <LogInButton />}
+        {user && <UsernameButton username={username} />}
+        {user && <LogOutButton />}
       </div>
     </nav>
   );

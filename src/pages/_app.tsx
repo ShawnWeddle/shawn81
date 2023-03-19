@@ -1,5 +1,6 @@
 import { type AppType } from "next/app";
 import { PostContextProvider } from "~/context/PostContext";
+import { AuthContextProvider } from "~/context/AuthContext";
 
 import { api } from "~/utils/api";
 
@@ -7,9 +8,11 @@ import "~/styles/globals.css";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
-    <PostContextProvider>
-      <Component {...pageProps} />
-    </PostContextProvider>
+    <AuthContextProvider>
+      <PostContextProvider>
+        <Component {...pageProps} />
+      </PostContextProvider>
+    </AuthContextProvider>
   );
 };
 

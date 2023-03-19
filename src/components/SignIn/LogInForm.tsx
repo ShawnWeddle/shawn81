@@ -2,12 +2,15 @@
 import { useState } from "react";
 import type { FormEventHandler } from "react";
 import { api } from "~/utils/api";
+import { useAuthContext } from "../../hooks/useAuthContext";
 
 const LogInForm: React.FC = () => {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+
+  const { authState, authDispatch } = useAuthContext();
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
@@ -19,9 +22,22 @@ const LogInForm: React.FC = () => {
       },
       {
         onSuccess(data, variables, context) {
-          localStorage.setItem("token", data.token);
-          localStorage.setItem("userId", data.user.userId);
-          localStorage.setItem("username", data.user.username);
+          authDispatch({
+            type: "LOGIN",
+            payload: {
+              token: data.token,
+              userId: data.user.userId,
+              username: data.user.username,
+            },
+          });
+          localStorage.setItem(
+            "user",
+            JSON.stringify({
+              token: data.token,
+              userId: data.user.userId,
+              username: data.user.username,
+            })
+          );
         },
       }
     );

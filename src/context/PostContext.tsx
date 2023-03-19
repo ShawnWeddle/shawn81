@@ -1,5 +1,7 @@
+/* eslint-disable */
 import { createContext, useReducer } from "react";
-import type { PostDocument, UnoccupiedPostType } from "../data/data";
+import type { UnoccupiedPostType } from "../data/data";
+import type { Post } from "@prisma/client";
 import { basePostArray } from "../data/data";
 
 export const PostContext = createContext<ContextType | null>(null);
@@ -7,15 +9,15 @@ export const PostContext = createContext<ContextType | null>(null);
 type ContextType = {
   postState: {
     windowMode: "rules" | "display" | "edit" | "create";
-    activePost: PostDocument | UnoccupiedPostType | null;
-    posts: (PostDocument | UnoccupiedPostType)[];
+    activePost: Post | UnoccupiedPostType | null;
+    posts: (Post | UnoccupiedPostType)[];
   };
   postDispatch: React.Dispatch<{
     type: string;
     payload: {
       windowMode: "rules" | "display" | "edit" | "create";
-      activePost: PostDocument | UnoccupiedPostType | null;
-      posts: (PostDocument | UnoccupiedPostType)[];
+      activePost: Post | UnoccupiedPostType | null;
+      posts: (Post | UnoccupiedPostType)[];
     };
   }>;
 };
@@ -26,15 +28,15 @@ type PostContextProviderProps = {
 
 type PostReducerState = {
   windowMode: "rules" | "display" | "edit" | "create";
-  activePost: PostDocument | UnoccupiedPostType | null;
-  posts: (PostDocument | UnoccupiedPostType)[];
+  activePost: Post | UnoccupiedPostType | null;
+  posts: (Post | UnoccupiedPostType)[];
 };
 type PostReducerAction = {
   type: string;
   payload: {
     windowMode: "rules" | "display" | "edit" | "create";
-    activePost: PostDocument | UnoccupiedPostType | null;
-    posts: (PostDocument | UnoccupiedPostType)[];
+    activePost: Post | UnoccupiedPostType | null;
+    posts: (Post | UnoccupiedPostType)[];
   };
 };
 
@@ -58,7 +60,7 @@ export const postReducer = (
 export const PostContextProvider = ({ children }: PostContextProviderProps) => {
   const [postState, postDispatch] = useReducer(postReducer, {
     windowMode: "rules",
-    activePost: { _id: "NoID", username: "", message: "", location: -1 },
+    activePost: { id: "NoID", username: "", message: "", location: -1 },
     posts: basePostArray(),
   });
 
