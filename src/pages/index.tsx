@@ -23,7 +23,7 @@ const Home: NextPage = () => {
           <Window />
           <MainGrid />
         </div>
-        <div className="bg-zinc-700">{postState.windowMode}</div>
+        <div className="bg-zinc-700"></div>
       </main>
     </>
   );
