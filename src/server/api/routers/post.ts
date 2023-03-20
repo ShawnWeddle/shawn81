@@ -1,5 +1,5 @@
 import { createPostSchema } from "../post/schema";
-import { createPostHandler, getAllPostsHandler } from "../post/controller";
+import { createPostHandler, getAllPostsHandler, updatePostHandler } from "../post/controller";
 
 import { createTRPCRouter, publicProcedure, privateProcedure } from "../trpc";
 
@@ -9,6 +9,10 @@ export const postRouter = createTRPCRouter({
   .mutation(({ input }) => createPostHandler({ input })),
 
   getAllPosts: publicProcedure
-  .query(() => getAllPostsHandler())
+  .query(() => getAllPostsHandler()),
+
+  updatePost: privateProcedure
+  .input(createPostSchema)
+  .mutation(({input}) => updatePostHandler({input})) 
 }
 );

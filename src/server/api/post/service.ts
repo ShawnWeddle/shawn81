@@ -13,7 +13,7 @@ export const findPost = async (
 ) => {
   return (await prisma.post.findFirst({
     where,
-    select,
+    select
   })) as Post;
 };
 
@@ -27,6 +27,15 @@ export const findUniquePost = async (
 ) => {
   return (await prisma.post.findUnique({
     where,
-    select,
+    select
   })) as Post;
 };
+
+export const updatePost = async (
+  input: Prisma.PostUpdateInput,
+  where: Prisma.PostWhereUniqueInput
+) => {
+  return (await prisma.post.update({
+    where,
+    data: input
+  }))};

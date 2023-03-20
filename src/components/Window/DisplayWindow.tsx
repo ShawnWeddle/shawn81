@@ -5,9 +5,6 @@ import { useAuthContext } from "~/hooks/useAuthContext";
 import { api } from "~/utils/api";
 
 interface InnerWindowProps {
-  username: string;
-  message: string;
-  location: number;
   page: string;
 }
 
@@ -15,12 +12,13 @@ const DisplayWindow: React.FC<InnerWindowProps> = (props: InnerWindowProps) => {
   const { postState, postDispatch } = usePostContext();
   const { authState, authDispatch } = useAuthContext();
   const user = authState.user;
+  const activePost = postState.activePost;
 
-  const [message, setMessage] = useState<string>("");
+  const [isDeletingPost, setIsDeletingPost] = useState<boolean>(false);
 
   const createPost = api.post.createPost.useMutation();
 
-  if (!user) {
+  if (!activePost) {
     postDispatch({
       type: "CHANGE",
       payload: {
@@ -34,34 +32,13 @@ const DisplayWindow: React.FC<InnerWindowProps> = (props: InnerWindowProps) => {
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-
-    createPost.mutate(
-      {
-        username: props.username,
-        message: message,
-        location: props.location,
-        userId: user.userId,
-      },
-      {
-        onSuccess: () => {
-          postDispatch({
-            type: "CHANGE",
-            payload: {
-              windowMode: "display",
-              activePost: postState.activePost,
-              posts: postState.posts,
-            },
-          });
-        },
-      }
-    );
   };
 
   return (
     <form className="flex flex-col" onSubmit={handleSubmit}>
       <div className="mx-4 my-2 flex justify-between text-2xl">
-        <span>{props.location}</span>
-        <span>{props.username}</span>
+        <span>{activePost.location}</span>
+        <span>{activePost.username}</span>
         <button
           type="button"
           onClick={() => {
@@ -78,24 +55,56 @@ const DisplayWindow: React.FC<InnerWindowProps> = (props: InnerWindowProps) => {
           ✕
         </button>
       </div>
-      <textarea
-        placeholder="Please type your message here"
-        rows={4}
-        className="m-2 bg-zinc-50 text-black"
-        value={message}
-        onChange={(e) => {
-          setMessage(e.target.value);
-        }}
-      />
-      <div className="flex justify-center">
-        <button
-          type="submit"
-          disabled={createPost.isLoading}
-          className="rounded-lg border-2 border-zinc-50 bg-zinc-800 p-1 text-lg hover:bg-gradient-to-br hover:from-zinc-800 hover:to-blue-800"
-        >
-          Submit
-        </button>
+      <div className="m-2 h-24 bg-zinc-700 p-1 text-zinc-50">
+        {activePost.message}
       </div>
+      {activePost.username === user?.username && !isDeletingPost && (
+        <div className="flex justify-center gap-2">
+          <button
+            onClick={() => {
+              postDispatch({
+                type: "CHANGE",
+                payload: {
+                  windowMode: "edit",
+                  activePost: postState.activePost,
+                  posts: postState.posts,
+                },
+              });
+            }}
+            className="rounded-lg border-2 border-zinc-50 bg-zinc-800 p-1 text-lg hover:bg-gradient-to-br hover:from-zinc-800 hover:to-blue-800"
+          >
+            Edit
+          </button>
+          <button
+            onClick={() => {
+              setIsDeletingPost(true);
+            }}
+            className="rounded-lg border-2 border-zinc-50 bg-zinc-800 p-1 text-lg hover:bg-gradient-to-br hover:from-zinc-800 hover:to-red-800"
+          >
+            Delete
+          </button>
+        </div>
+      )}
+      {activePost.username === user?.username && isDeletingPost && (
+        <>
+          <p className="mb-2 text-center">
+            Are you sure you want to delete this post?
+          </p>
+          <div className="flex justify-center gap-2">
+            <button
+              onClick={() => {
+                setIsDeletingPost(false);
+              }}
+              className="rounded-lg border-2 border-zinc-50 bg-zinc-800 p-1 text-lg hover:bg-gradient-to-br hover:from-zinc-800 hover:to-blue-800"
+            >
+              Cancel
+            </button>
+            <button className="rounded-lg border-2 border-zinc-50 bg-zinc-800 p-1 text-lg hover:bg-gradient-to-br hover:from-zinc-800 hover:to-red-800">
+              Delete
+            </button>
+          </div>
+        </>
+      )}
     </form>
   );
 };

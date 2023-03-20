@@ -8,6 +8,7 @@ import { usePostContext } from "../../hooks/usePostContext";
 import RulesWindow from "./RulesWindow";
 import CreateWindow from "./CreateWindow";
 import UpdateWindow from "./UpdateWindow";
+import DisplayWindow from "./DisplayWindow";
 
 const Window: React.FC = () => {
   const { postState, postDispatch } = usePostContext();
@@ -20,21 +21,9 @@ const Window: React.FC = () => {
         authState.user && <CreateWindow page="HOME" />}
       {postState.windowMode === "edit" &&
         postState.activePost &&
-        authState.user && (
-          <UpdateWindow
-            username={authState.user.username}
-            location={postState.activePost.location}
-            message=""
-            page="HOME"
-          />
-        )}
+        authState.user && <UpdateWindow page="HOME" />}
       {postState.windowMode === "display" && postState.activePost && (
-        <UpdateWindow
-          username={postState.activePost.username}
-          location={postState.activePost.location}
-          message={postState.activePost.message}
-          page="home"
-        />
+        <DisplayWindow page="HOME" />
       )}
     </div>
   );

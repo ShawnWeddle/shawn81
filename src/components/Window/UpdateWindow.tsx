@@ -5,22 +5,23 @@ import { useAuthContext } from "~/hooks/useAuthContext";
 import { api } from "~/utils/api";
 
 interface InnerWindowProps {
-  username: string;
-  message: string;
-  location: number;
-  page: string;
+  page: "HOME" | "PROFILE";
 }
 
 const UpdateWindow: React.FC<InnerWindowProps> = (props: InnerWindowProps) => {
   const { postState, postDispatch } = usePostContext();
   const { authState, authDispatch } = useAuthContext();
   const user = authState.user;
+  const activePost = postState.activePost;
+  const activePosts = postState.posts;
 
-  const [message, setMessage] = useState<string>("");
+  const [message, setMessage] = useState<string>(
+    activePost ? activePost.message : ""
+  );
 
-  const createPost = api.post.createPost.useMutation();
+  const updatePost = api.post.updatePost.useMutation();
 
-  if (!user) {
+  if (!user || !activePost) {
     postDispatch({
       type: "CHANGE",
       payload: {
@@ -32,18 +33,37 @@ const UpdateWindow: React.FC<InnerWindowProps> = (props: InnerWindowProps) => {
     return <></>;
   }
 
+  const getAllPosts = api.post.getAllPosts.useQuery(undefined, {
+    onSuccess(data) {
+      const { posts } = data;
+      posts.map((item, index) => {
+        activePosts[item.location] = item;
+      });
+      console.log("Going");
+      postDispatch({
+        type: "CHANGE",
+        payload: {
+          windowMode: postState.windowMode,
+          activePost: postState.activePost,
+          posts: activePosts,
+        },
+      });
+    },
+  });
+
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
 
-    createPost.mutate(
+    updatePost.mutate(
       {
-        username: props.username,
+        username: user.username,
         message: message,
-        location: props.location,
+        location: activePost.location,
         userId: user.userId,
       },
       {
         onSuccess: () => {
+          getAllPosts;
           postDispatch({
             type: "CHANGE",
             payload: {
@@ -60,8 +80,8 @@ const UpdateWindow: React.FC<InnerWindowProps> = (props: InnerWindowProps) => {
   return (
     <form className="flex flex-col" onSubmit={handleSubmit}>
       <div className="mx-4 my-2 flex justify-between text-2xl">
-        <span>{props.location}</span>
-        <span>{props.username}</span>
+        <span>{activePost.location}</span>
+        <span>{user.username}</span>
         <button
           type="button"
           onClick={() => {
@@ -90,7 +110,7 @@ const UpdateWindow: React.FC<InnerWindowProps> = (props: InnerWindowProps) => {
       <div className="flex justify-center">
         <button
           type="submit"
-          disabled={createPost.isLoading}
+          disabled={updatePost.isLoading}
           className="rounded-lg border-2 border-zinc-50 bg-zinc-800 p-1 text-lg hover:bg-gradient-to-br hover:from-zinc-800 hover:to-blue-800"
         >
           Submit

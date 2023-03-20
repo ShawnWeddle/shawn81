@@ -101,7 +101,7 @@ const CreateWindow: React.FC<InnerWindowProps> = (props: InnerWindowProps) => {
       <textarea
         placeholder="Please type your message here"
         rows={4}
-        className="m-2 bg-zinc-50 text-black"
+        className="m-2 bg-zinc-50 p-1 text-black"
         value={message}
         onChange={(e) => {
           setMessage(e.target.value);

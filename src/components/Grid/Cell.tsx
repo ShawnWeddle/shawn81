@@ -1,4 +1,5 @@
 import { usePostContext } from "../../hooks/usePostContext";
+import { useAuthContext } from "../../hooks/useAuthContext";
 import type { UnoccupiedPostType } from "../../data/data";
 import type { Post } from "@prisma/client";
 
@@ -8,19 +9,41 @@ interface MainCellProps {
 
 const MainCell: React.FC<MainCellProps> = (props: MainCellProps) => {
   const { postState, postDispatch } = usePostContext();
-  if (postState.posts) {
-  }
+  const { authState, authDispatch } = useAuthContext();
+
   return (
     <div
       onClick={() => {
-        postDispatch({
-          type: "CHANGE",
-          payload: {
-            windowMode: "create",
-            activePost: props.postProperties,
-            posts: postState.posts,
-          },
-        });
+        if (props.postProperties.id === "NoID") {
+          if (authState.user) {
+            postDispatch({
+              type: "CHANGE",
+              payload: {
+                windowMode: "create",
+                activePost: props.postProperties,
+                posts: postState.posts,
+              },
+            });
+          } else {
+            postDispatch({
+              type: "CHANGE",
+              payload: {
+                windowMode: "rules",
+                activePost: props.postProperties,
+                posts: postState.posts,
+              },
+            });
+          }
+        } else {
+          postDispatch({
+            type: "CHANGE",
+            payload: {
+              windowMode: "display",
+              activePost: props.postProperties,
+              posts: postState.posts,
+            },
+          });
+        }
       }}
       className={
         props.postProperties.id === "NoID"
