@@ -7,19 +7,8 @@ import { basePostArray } from "../data/data";
 export const PostContext = createContext<ContextType | null>(null);
 
 type ContextType = {
-  postState: {
-    windowMode: "rules" | "display" | "edit" | "create";
-    activePost: Post | UnoccupiedPostType | null;
-    posts: (Post | UnoccupiedPostType)[];
-  };
-  postDispatch: React.Dispatch<{
-    type: string;
-    payload: {
-      windowMode: "rules" | "display" | "edit" | "create";
-      activePost: Post | UnoccupiedPostType | null;
-      posts: (Post | UnoccupiedPostType)[];
-    };
-  }>;
+  postState: PostReducerState;
+  postDispatch: React.Dispatch<PostReducerAction>;
 };
 
 type PostContextProviderProps = {
@@ -32,12 +21,8 @@ type PostReducerState = {
   posts: (Post | UnoccupiedPostType)[];
 };
 type PostReducerAction = {
-  type: string;
-  payload: {
-    windowMode: "rules" | "display" | "edit" | "create";
-    activePost: Post | UnoccupiedPostType | null;
-    posts: (Post | UnoccupiedPostType)[];
-  };
+  type: "CHANGE";
+  payload: PostReducerState;
 };
 
 export const postReducer = (

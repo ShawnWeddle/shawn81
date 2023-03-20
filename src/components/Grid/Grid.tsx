@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { api } from "../../utils/api";
 import { usePostContext } from "../../hooks/usePostContext";
 import MainCell from "./Cell";
@@ -6,7 +7,26 @@ const MainGrid: React.FC = () => {
   const { postState, postDispatch } = usePostContext();
   const activePosts = postState.posts;
 
-  /*const getAllPosts = api.postRouter.getall.useQuery();*/
+  const getAllPosts = api.post.getAllPosts.useQuery(undefined, {
+    onSuccess(data) {
+      const { posts } = data;
+      posts.map((item, index) => {
+        activePosts[item.location] = item;
+      });
+      postDispatch({
+        type: "CHANGE",
+        payload: {
+          windowMode: postState.windowMode,
+          activePost: postState.activePost,
+          posts: activePosts,
+        },
+      });
+    },
+  });
+
+  useEffect(() => {
+    getAllPosts;
+  }, []);
 
   const Cells = activePosts.map((post, index) => (
     <MainCell postProperties={post} key={index} />

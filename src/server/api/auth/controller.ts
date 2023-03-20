@@ -18,7 +18,7 @@ export const registerHandler = async ({
     return {
       status: 'success',
       data: {
-        user,
+        user
       },
     };
   } catch (err) {

@@ -1,7 +1,8 @@
 /* eslint-disable */
 import { useState } from "react";
 import type { FormEventHandler } from "react";
-import { api } from "~/utils/api";
+import { useRouter } from "next/router";
+import { api, setToken } from "~/utils/api";
 import { useAuthContext } from "../../hooks/useAuthContext";
 
 const LogInForm: React.FC = () => {
@@ -11,6 +12,9 @@ const LogInForm: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
   const { authState, authDispatch } = useAuthContext();
+  const user = authState.user;
+
+  const router = useRouter();
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
@@ -38,12 +42,31 @@ const LogInForm: React.FC = () => {
               username: data.user.username,
             })
           );
+          setToken(data.token);
+          void router.push("/");
         },
       }
     );
   };
 
   const logInUser = api.user.logInUser.useMutation();
+
+  if (user) {
+    return (
+      <div className="flex justify-center">
+        <div>
+          <p className="m-4 max-w-md text-center text-4xl text-zinc-50">
+            {user.username}
+          </p>
+          <p className="max-w-sm text-xl text-zinc-50">
+            It appears you are already logged in as {user.username}. If you
+            would like to log in under a different account, please log out
+            first.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex justify-center">

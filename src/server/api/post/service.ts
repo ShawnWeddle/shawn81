@@ -17,6 +17,10 @@ export const findPost = async (
   })) as Post;
 };
 
+export const findAllPosts = async () => {
+  return (await prisma.post.findMany());
+} ;
+
 export const findUniquePost = async (
   where: Prisma.PostWhereUniqueInput,
   select?: Prisma.PostSelect

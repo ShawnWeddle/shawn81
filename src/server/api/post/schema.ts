@@ -11,7 +11,8 @@ export const createPostSchema = object({
     .max(500, "Message must be no more than 500 characters"),
   location: number({required_error: "Location is required"})
     .min(0, "Location is out of range")
-    .max(80, "Location is out of range")
+    .max(80, "Location is out of range"),
+  userId: string({ required_error: 'UserId is required' })
 });
 
 

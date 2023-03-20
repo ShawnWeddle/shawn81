@@ -7,18 +7,26 @@ const SignUpForm: React.FC = () => {
   const [password, setPassword] = useState<string>("");
   const [passwordConfirmation, setPasswordConfirmation] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(true);
+  const [isSignedUp, setIsSignedUp] = useState<boolean>(false);
+
+  const registerUser = api.user.registerUser.useMutation();
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
     console.log("Sign Up");
-    registerUser.mutate({
-      username: username,
-      password: password,
-      passwordConfirm: passwordConfirmation,
-    });
+    registerUser.mutate(
+      {
+        username: username,
+        password: password,
+        passwordConfirm: passwordConfirmation,
+      },
+      {
+        onSuccess(data, variables, context) {
+          setIsSignedUp(true);
+        },
+      }
+    );
   };
-
-  const registerUser = api.user.registerUser.useMutation();
 
   return (
     <div className="flex justify-center">
@@ -76,12 +84,24 @@ const SignUpForm: React.FC = () => {
           </div>
         </div>
         <div className="flex justify-center">
-          <button
-            type="submit"
-            className="mb-2 rounded-lg border-2 border-zinc-50 bg-zinc-800 p-1 text-lg text-zinc-50 hover:bg-gradient-to-br hover:from-zinc-800 hover:to-blue-800"
-          >
-            Sign Up
-          </button>
+          {isSignedUp ? (
+            <div>
+              <p className="max m-2 text-center text-lg text-zinc-50">
+                Thank you for signing up!
+              </p>
+              <p className="max m-2 text-center text-lg text-zinc-50">
+                Please Log In to post a message
+              </p>
+            </div>
+          ) : (
+            <button
+              type="submit"
+              disabled={registerUser.isLoading}
+              className="mb-2 rounded-lg border-2 border-zinc-50 bg-zinc-800 p-1 text-lg text-zinc-50 hover:bg-gradient-to-br hover:from-zinc-800 hover:to-blue-800"
+            >
+              Sign Up
+            </button>
+          )}
         </div>
       </form>
     </div>
