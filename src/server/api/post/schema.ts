@@ -15,5 +15,10 @@ export const createPostSchema = object({
   userId: string({ required_error: 'UserId is required' })
 });
 
+export const deletePostSchema = number()
+  .min(0, "Location is out of range")
+  .max(80, "Location is out of range");
+
 
 export type CreatePostInput = TypeOf<typeof createPostSchema>;
+export type DeletePostInput = TypeOf<typeof deletePostSchema>;

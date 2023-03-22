@@ -1,7 +1,3 @@
-/* eslint-disable */
-import { useState } from "react";
-import type { FormEventHandler } from "react";
-import { api } from "../../utils/api";
 import { useAuthContext } from "~/hooks/useAuthContext";
 import { usePostContext } from "../../hooks/usePostContext";
 

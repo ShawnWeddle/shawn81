@@ -44,13 +44,16 @@ const CreateWindow: React.FC<InnerWindowProps> = (props: InnerWindowProps) => {
         userId: user.userId,
       },
       {
-        onSuccess: () => {
+        onSuccess(data) {
+          const newPost = data.data.post;
+          const newPosts = postState.posts;
+          newPosts[newPost.location] = newPost;
           postDispatch({
             type: "CHANGE",
             payload: {
               windowMode: "display",
-              activePost: postState.activePost,
-              posts: postState.posts,
+              activePost: data.data.post,
+              posts: newPosts,
             },
           });
         },
@@ -111,7 +114,7 @@ const CreateWindow: React.FC<InnerWindowProps> = (props: InnerWindowProps) => {
         <button
           type="submit"
           disabled={createPost.isLoading}
-          className="rounded-lg border-2 border-zinc-50 bg-zinc-800 p-1 text-lg hover:bg-gradient-to-br hover:from-zinc-800 hover:to-blue-800"
+          className="rounded-lg border-2 border-zinc-50 bg-zinc-800 p-1 text-lg hover:bg-gradient-to-br hover:from-zinc-800 hover:to-pink-800"
         >
           Submit
         </button>

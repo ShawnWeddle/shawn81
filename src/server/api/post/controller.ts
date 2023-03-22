@@ -1,4 +1,4 @@
-import { createPost, findAllPosts, updatePost } from "./service";
+import { createPost, findAllPosts, updatePost, deletePost } from "./service";
 import type { CreatePostInput } from "./schema";
 
 export const getAllPostsHandler = async () => {
@@ -65,6 +65,24 @@ export const updatePostHandler = async ({
       data: {
         post
       },
+    };
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const deletePostHandler = async ({
+  input
+}: {
+  input: number;
+}) => {
+  try {
+    await deletePost({
+      location: input
+    });
+
+    return {
+      status: 'success'
     };
   } catch (err) {
     throw err;

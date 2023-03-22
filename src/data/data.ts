@@ -12,10 +12,19 @@ export interface UnoccupiedPostType {
   location: number;
 }
 
+export const newUnoccupiedPost = (location: number): UnoccupiedPostType => {
+  return {
+  id: "NoID",
+  username: "",
+  message: "",
+  location: location
+  }
+}
+
 export const basePostArray = () => {
   const baseArray: (UnoccupiedPostType|Post)[] = [];
   for(let i=0; i<81; i++){
-    baseArray[i] = {id: "NoID", username: "", message: "", location: i}
+    baseArray[i] = newUnoccupiedPost(i);
   }
   return baseArray;
 }

@@ -39,3 +39,10 @@ export const updatePost = async (
     where,
     data: input
   }))};
+  
+export const deletePost = async (
+  where: Prisma.PostWhereUniqueInput
+) => {
+  return (await prisma.post.delete({
+    where
+  }))};

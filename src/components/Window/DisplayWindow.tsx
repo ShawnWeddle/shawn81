@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { FormEventHandler } from "react";
+import { UnoccupiedPostType, newUnoccupiedPost } from "~/data/data";
 import { usePostContext } from "~/hooks/usePostContext";
 import { useAuthContext } from "~/hooks/useAuthContext";
 import { api } from "~/utils/api";
@@ -16,8 +17,6 @@ const DisplayWindow: React.FC<InnerWindowProps> = (props: InnerWindowProps) => {
 
   const [isDeletingPost, setIsDeletingPost] = useState<boolean>(false);
 
-  const createPost = api.post.createPost.useMutation();
-
   if (!activePost) {
     postDispatch({
       type: "CHANGE",
@@ -32,6 +31,26 @@ const DisplayWindow: React.FC<InnerWindowProps> = (props: InnerWindowProps) => {
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
+  };
+
+  const deletePost = api.post.deletePost.useMutation();
+
+  const handleDelete = () => {
+    deletePost.mutate(activePost.location, {
+      onSuccess(data, variables) {
+        const newPost = newUnoccupiedPost(variables);
+        const newPosts = postState.posts;
+        newPosts[variables] = newPost;
+        postDispatch({
+          type: "CHANGE",
+          payload: {
+            windowMode: "create",
+            activePost: newPost,
+            posts: newPosts,
+          },
+        });
+      },
+    });
   };
 
   return (
@@ -99,7 +118,12 @@ const DisplayWindow: React.FC<InnerWindowProps> = (props: InnerWindowProps) => {
             >
               Cancel
             </button>
-            <button className="rounded-lg border-2 border-zinc-50 bg-zinc-800 p-1 text-lg hover:bg-gradient-to-br hover:from-zinc-800 hover:to-red-800">
+            <button
+              onClick={() => {
+                handleDelete();
+              }}
+              className="rounded-lg border-2 border-zinc-50 bg-zinc-800 p-1 text-lg hover:bg-gradient-to-br hover:from-zinc-800 hover:to-red-800"
+            >
               Delete
             </button>
           </div>

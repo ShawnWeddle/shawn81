@@ -43,6 +43,7 @@ const LogInForm: React.FC = () => {
             })
           );
           setToken(data.token);
+          console.log(data.token);
           void router.push("/");
         },
       }

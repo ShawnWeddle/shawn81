@@ -13,7 +13,6 @@ const UpdateWindow: React.FC<InnerWindowProps> = (props: InnerWindowProps) => {
   const { authState, authDispatch } = useAuthContext();
   const user = authState.user;
   const activePost = postState.activePost;
-  const activePosts = postState.posts;
 
   const [message, setMessage] = useState<string>(
     activePost ? activePost.message : ""
@@ -33,24 +32,6 @@ const UpdateWindow: React.FC<InnerWindowProps> = (props: InnerWindowProps) => {
     return <></>;
   }
 
-  const getAllPosts = api.post.getAllPosts.useQuery(undefined, {
-    onSuccess(data) {
-      const { posts } = data;
-      posts.map((item, index) => {
-        activePosts[item.location] = item;
-      });
-      console.log("Going");
-      postDispatch({
-        type: "CHANGE",
-        payload: {
-          windowMode: postState.windowMode,
-          activePost: postState.activePost,
-          posts: activePosts,
-        },
-      });
-    },
-  });
-
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
 
@@ -62,14 +43,16 @@ const UpdateWindow: React.FC<InnerWindowProps> = (props: InnerWindowProps) => {
         userId: user.userId,
       },
       {
-        onSuccess: () => {
-          getAllPosts;
+        onSuccess(data) {
+          const newPost = data.data.post;
+          const newPosts = postState.posts;
+          newPosts[newPost.location] = newPost;
           postDispatch({
             type: "CHANGE",
             payload: {
               windowMode: "display",
-              activePost: postState.activePost,
-              posts: postState.posts,
+              activePost: data.data.post,
+              posts: newPosts,
             },
           });
         },
@@ -107,11 +90,14 @@ const UpdateWindow: React.FC<InnerWindowProps> = (props: InnerWindowProps) => {
           setMessage(e.target.value);
         }}
       />
-      <div className="flex justify-center">
+      <div className="flex justify-center gap-2">
+        <button className="rounded-lg border-2 border-zinc-50 bg-zinc-800 p-1 text-lg hover:bg-gradient-to-br hover:from-zinc-800 hover:to-blue-800">
+          Cancel
+        </button>
         <button
           type="submit"
           disabled={updatePost.isLoading}
-          className="rounded-lg border-2 border-zinc-50 bg-zinc-800 p-1 text-lg hover:bg-gradient-to-br hover:from-zinc-800 hover:to-blue-800"
+          className="rounded-lg border-2 border-zinc-50 bg-zinc-800 p-1 text-lg hover:bg-gradient-to-br hover:from-zinc-800 hover:to-pink-800"
         >
           Submit
         </button>

@@ -26,7 +26,7 @@ const MainGrid: React.FC = () => {
 
   useEffect(() => {
     getAllPosts;
-  }, [getAllPosts, postState]);
+  }, [getAllPosts]);
 
   const Cells = activePosts.map((post, index) => (
     <MainCell postProperties={post} key={index} />

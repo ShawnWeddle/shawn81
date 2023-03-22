@@ -1,15 +1,29 @@
+/* eslint-disable */
+import { useEffect } from "react";
 import { type NextPage } from "next";
 import Head from "next/head";
 
 import { usePostContext } from "../hooks/usePostContext";
+import { useAuthContext } from "~/hooks/useAuthContext";
+import { UserType } from "~/context/AuthContext";
 import NavBar from "../components/Nav/NavBar";
 import Window from "../components/Window/Window";
 import MainGrid from "../components/Grid/Grid";
 
-import { api } from "../utils/api";
+import { api, setToken } from "../utils/api";
 
 const Home: NextPage = () => {
   const { postState, postDispatch } = usePostContext();
+  const {} = useAuthContext();
+
+  useEffect(() => {
+    const userCheck: string | null = localStorage.getItem("user");
+    /*const user: UserType | null = userCheck ? JSON.parse(userCheck) : null;*/
+    const user: UserType | null = userCheck ? JSON.parse(userCheck) : null;
+    if (user) {
+      setToken(user.token);
+    }
+  }, []);
   return (
     <>
       <Head>

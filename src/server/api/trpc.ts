@@ -39,6 +39,8 @@ const requireUserAuth = t.middleware(({ ctx, next }) => {
     token = req.headers.authorization.split(' ')[1];
   }
 
+  console.log(token);
+
   if(!token){
     throw new TRPCError({code: "UNAUTHORIZED"});
   }
