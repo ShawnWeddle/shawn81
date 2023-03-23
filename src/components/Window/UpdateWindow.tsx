@@ -1,8 +1,10 @@
 import { useState } from "react";
 import type { FormEventHandler } from "react";
+import { useRouter } from "next/router";
 import { usePostContext } from "~/hooks/usePostContext";
 import { useAuthContext } from "~/hooks/useAuthContext";
 import { api } from "~/utils/api";
+import { createPostSchema } from "~/server/api/post/schema";
 
 interface InnerWindowProps {
   page: "HOME" | "PROFILE";
@@ -17,6 +19,9 @@ const UpdateWindow: React.FC<InnerWindowProps> = (props: InnerWindowProps) => {
   const [message, setMessage] = useState<string>(
     activePost ? activePost.message : ""
   );
+  const [updatePostErrors, setUpdatePostErrors] = useState<string[]>([]);
+
+  const router = useRouter();
 
   const updatePost = api.post.updatePost.useMutation();
 
@@ -35,51 +40,100 @@ const UpdateWindow: React.FC<InnerWindowProps> = (props: InnerWindowProps) => {
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
 
-    updatePost.mutate(
-      {
-        username: user.username,
-        message: message,
-        location: activePost.location,
-        userId: user.userId,
-      },
-      {
-        onSuccess(data) {
-          const newPost = data.data.post;
-          const newPosts = postState.posts;
-          newPosts[newPost.location] = newPost;
-          postDispatch({
-            type: "CHANGE",
-            payload: {
-              windowMode: "display",
-              activePost: data.data.post,
-              posts: newPosts,
-            },
-          });
+    const postValidation = createPostSchema.safeParse({
+      username: user.username,
+      message: message,
+      location: activePost.location,
+      userId: user.userId,
+    });
+
+    if (postValidation.success) {
+      updatePost.mutate(
+        {
+          username: user.username,
+          message: message,
+          location: activePost.location,
+          userId: user.userId,
         },
-      }
-    );
+        {
+          onSuccess(data) {
+            const newPost = data.data.post;
+            const newPosts = postState.posts;
+            newPosts[newPost.location] = newPost;
+            postDispatch({
+              type: "CHANGE",
+              payload: {
+                windowMode: "display",
+                activePost: data.data.post,
+                posts: newPosts,
+              },
+            });
+          },
+          onError(error) {
+            setUpdatePostErrors([
+              "Sorry, I don't know why you're seeing this error",
+            ]);
+          },
+        }
+      );
+    } else {
+      const postValidationErrors = postValidation.error.issues.map((error) => {
+        return error.message;
+      });
+      setUpdatePostErrors(postValidationErrors);
+    }
   };
+
+  const updatePostErrorsList = updatePostErrors.map((error, index) => {
+    return (
+      <p
+        className="max m-2 bg-red-500/50 p-1 text-center text-lg text-zinc-50"
+        key={index}
+      >
+        {error}
+      </p>
+    );
+  });
 
   return (
     <form className="flex flex-col" onSubmit={handleSubmit}>
       <div className="mx-4 my-2 flex justify-between text-2xl">
         <span>{activePost.location}</span>
         <span>{user.username}</span>
-        <button
-          type="button"
-          onClick={() => {
-            postDispatch({
-              type: "CHANGE",
-              payload: {
-                windowMode: "rules",
-                activePost: postState.activePost,
-                posts: postState.posts,
-              },
-            });
-          }}
-        >
-          ✕
-        </button>
+        {props.page === "HOME" ? (
+          <button
+            type="button"
+            onClick={() => {
+              postDispatch({
+                type: "CHANGE",
+                payload: {
+                  windowMode: "rules",
+                  activePost: postState.activePost,
+                  posts: postState.posts,
+                },
+              });
+            }}
+          >
+            ✕
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={() => {
+              postDispatch({
+                type: "CHANGE",
+                payload: {
+                  windowMode: "rules",
+                  activePost: postState.activePost,
+                  posts: postState.posts,
+                },
+              });
+              void router.push("/");
+            }}
+          >
+            ⮌
+          </button>
+        )}
       </div>
       <textarea
         placeholder="Please type your message here"
@@ -90,6 +144,15 @@ const UpdateWindow: React.FC<InnerWindowProps> = (props: InnerWindowProps) => {
           setMessage(e.target.value);
         }}
       />
+      <div
+        className={
+          message.length < 1 || message.length > 500
+            ? "mr-2 text-right text-lg text-red-600"
+            : "mr-2 text-right text-lg text-zinc-50"
+        }
+      >
+        {message.length}/500
+      </div>
       <div className="flex justify-center gap-2">
         <button className="rounded-lg border-2 border-zinc-50 bg-zinc-800 p-1 text-lg hover:bg-gradient-to-br hover:from-zinc-800 hover:to-blue-800">
           Cancel

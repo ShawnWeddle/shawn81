@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { usePostContext } from "~/hooks/usePostContext";
 import { useAuthContext } from "~/hooks/useAuthContext";
 import { api } from "~/utils/api";
+import { createPostSchema } from "~/server/api/post/schema";
 
 interface InnerWindowProps {
   page: "HOME" | "PROFILE";
@@ -16,6 +17,7 @@ const CreateWindow: React.FC<InnerWindowProps> = (props: InnerWindowProps) => {
   const activePost = postState.activePost;
 
   const [message, setMessage] = useState<string>("");
+  const [createPostErrors, setCreatePostErrors] = useState<string[]>([]);
 
   const router = useRouter();
 
@@ -36,30 +38,59 @@ const CreateWindow: React.FC<InnerWindowProps> = (props: InnerWindowProps) => {
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
 
-    createPost.mutate(
-      {
-        username: user.username,
-        message: message,
-        location: activePost.location,
-        userId: user.userId,
-      },
-      {
-        onSuccess(data) {
-          const newPost = data.data.post;
-          const newPosts = postState.posts;
-          newPosts[newPost.location] = newPost;
-          postDispatch({
-            type: "CHANGE",
-            payload: {
-              windowMode: "display",
-              activePost: data.data.post,
-              posts: newPosts,
-            },
-          });
+    const postValidation = createPostSchema.safeParse({
+      username: user.username,
+      message: message,
+      location: activePost.location,
+      userId: user.userId,
+    });
+    if (postValidation.success) {
+      createPost.mutate(
+        {
+          username: user.username,
+          message: message,
+          location: activePost.location,
+          userId: user.userId,
         },
-      }
-    );
+        {
+          onSuccess(data) {
+            const newPost = data.data.post;
+            const newPosts = postState.posts;
+            newPosts[newPost.location] = newPost;
+            postDispatch({
+              type: "CHANGE",
+              payload: {
+                windowMode: "display",
+                activePost: data.data.post,
+                posts: newPosts,
+              },
+            });
+          },
+          onError(error) {
+            setCreatePostErrors([
+              "Sorry, accounts can only post one message right now. You can always edit your current post.",
+            ]);
+          },
+        }
+      );
+    } else {
+      const postValidationErrors = postValidation.error.issues.map((error) => {
+        return error.message;
+      });
+      setCreatePostErrors(postValidationErrors);
+    }
   };
+
+  const createPostErrorsList = createPostErrors.map((error, index) => {
+    return (
+      <p
+        className="max m-2 bg-red-500/50 p-1 text-center text-lg text-zinc-50"
+        key={index}
+      >
+        {error}
+      </p>
+    );
+  });
 
   return (
     <form className="flex flex-col" onSubmit={handleSubmit}>
@@ -110,15 +141,27 @@ const CreateWindow: React.FC<InnerWindowProps> = (props: InnerWindowProps) => {
           setMessage(e.target.value);
         }}
       />
+      <div
+        className={
+          message.length < 1 || message.length > 500
+            ? "mr-2 text-right text-lg text-red-600"
+            : "mr-2 text-right text-lg text-zinc-50"
+        }
+      >
+        {message.length}/500
+      </div>
       <div className="flex justify-center">
         <button
           type="submit"
-          disabled={createPost.isLoading}
+          disabled={
+            createPost.isLoading || message.length < 1 || message.length > 500
+          }
           className="rounded-lg border-2 border-zinc-50 bg-zinc-800 p-1 text-lg hover:bg-gradient-to-br hover:from-zinc-800 hover:to-pink-800"
         >
           Submit
         </button>
       </div>
+      {createPostErrors && <div>{createPostErrorsList}</div>}
     </form>
   );
 };

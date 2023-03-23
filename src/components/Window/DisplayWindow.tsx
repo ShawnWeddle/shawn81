@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { FormEventHandler } from "react";
-import { UnoccupiedPostType, newUnoccupiedPost } from "~/data/data";
+import { newUnoccupiedPost } from "~/data/data";
 import { usePostContext } from "~/hooks/usePostContext";
 import { useAuthContext } from "~/hooks/useAuthContext";
 import { api } from "~/utils/api";
@@ -74,7 +74,7 @@ const DisplayWindow: React.FC<InnerWindowProps> = (props: InnerWindowProps) => {
           ✕
         </button>
       </div>
-      <div className="m-2 h-24 bg-zinc-700 p-1 text-zinc-50">
+      <div className="m-2 bg-zinc-700 p-1 text-zinc-50">
         {activePost.message}
       </div>
       {activePost.username === user?.username && !isDeletingPost && (
