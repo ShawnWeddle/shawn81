@@ -1,13 +1,24 @@
 import { useAuthContext } from "~/hooks/useAuthContext";
+import { usePostContext } from "~/hooks/usePostContext";
 import { useRouter } from "next/router";
 
 const LogOutButton: React.FC = () => {
   const { authState, authDispatch } = useAuthContext();
+  const { postState, postDispatch } = usePostContext();
+
   const router = useRouter();
 
   const handleLogOut = () => {
     localStorage.removeItem("user");
     authDispatch({ type: "LOGOUT", payload: null });
+    postDispatch({
+      type: "CHANGE",
+      payload: {
+        windowMode: "rules",
+        activePost: postState.activePost,
+        posts: postState.posts,
+      },
+    });
     void router.push("/");
   };
 

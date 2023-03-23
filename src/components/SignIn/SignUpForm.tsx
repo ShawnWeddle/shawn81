@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { FormEventHandler } from "react";
 import { api } from "../../utils/api";
+import { createUserSchema } from "~/server/api/auth/schema";
 
 const SignUpForm: React.FC = () => {
   const [username, setUsername] = useState<string>("");
@@ -8,25 +9,52 @@ const SignUpForm: React.FC = () => {
   const [passwordConfirmation, setPasswordConfirmation] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(true);
   const [isSignedUp, setIsSignedUp] = useState<boolean>(false);
+  const [signUpErrors, setSignUpErrors] = useState<string[]>([]);
 
   const registerUser = api.user.registerUser.useMutation();
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-    console.log("Sign Up");
-    registerUser.mutate(
-      {
-        username: username,
-        password: password,
-        passwordConfirm: passwordConfirmation,
-      },
-      {
-        onSuccess(data, variables, context) {
-          setIsSignedUp(true);
+    const userValidation = createUserSchema.safeParse({
+      username: username,
+      password: password,
+      passwordConfirm: passwordConfirmation,
+    });
+    if (userValidation.success) {
+      registerUser.mutate(
+        {
+          username: username,
+          password: password,
+          passwordConfirm: passwordConfirmation,
         },
-      }
-    );
+        {
+          onSuccess() {
+            setSignUpErrors([]);
+            setIsSignedUp(true);
+          },
+          onError(error) {
+            setSignUpErrors(["This username is already taken"]);
+          },
+        }
+      );
+    } else {
+      const userValidationErrors = userValidation.error.issues.map((error) => {
+        return error.message;
+      });
+      setSignUpErrors(userValidationErrors);
+    }
   };
+
+  const signUpErrorList = signUpErrors.map((error, index) => {
+    return (
+      <p
+        className="max m-2 bg-red-500/50 text-center text-lg text-zinc-50"
+        key={index}
+      >
+        {error}
+      </p>
+    );
+  });
 
   return (
     <div className="flex justify-center">
@@ -103,6 +131,7 @@ const SignUpForm: React.FC = () => {
             </button>
           )}
         </div>
+        {signUpErrors && <div>{signUpErrorList}</div>}
       </form>
     </div>
   );

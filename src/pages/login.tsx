@@ -1,11 +1,8 @@
 import { type NextPage } from "next";
 import Head from "next/head";
-import Link from "next/link";
 
 import NavBar from "../components/Nav/NavBar";
 import LogInForm from "../components/SignIn/LogInForm";
-
-import { api } from "../utils/api";
 
 const LogInPage: NextPage = () => {
   return (

@@ -18,7 +18,6 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     const userCheck: string | null = localStorage.getItem("user");
-    /*const user: UserType | null = userCheck ? JSON.parse(userCheck) : null;*/
     const user: UserType | null = userCheck ? JSON.parse(userCheck) : null;
     if (user) {
       setToken(user.token);

@@ -9,7 +9,7 @@ const LogInForm: React.FC = () => {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [logInErrors, setLogInErrors] = useState<string[]>([]);
 
   const { authState, authDispatch } = useAuthContext();
   const user = authState.user;
@@ -25,7 +25,7 @@ const LogInForm: React.FC = () => {
         password: password,
       },
       {
-        onSuccess(data, variables, context) {
+        onSuccess(data) {
           authDispatch({
             type: "LOGIN",
             payload: {
@@ -43,8 +43,10 @@ const LogInForm: React.FC = () => {
             })
           );
           setToken(data.token);
-          console.log(data.token);
           void router.push("/");
+        },
+        onError(error) {
+          setLogInErrors(["Invalid username or password"]);
         },
       }
     );
@@ -68,6 +70,17 @@ const LogInForm: React.FC = () => {
       </div>
     );
   }
+
+  const logInErrorList = logInErrors.map((error, index) => {
+    return (
+      <p
+        className="max m-2 bg-red-500/50 text-center text-lg text-zinc-50"
+        key={index}
+      >
+        {error}
+      </p>
+    );
+  });
 
   return (
     <div className="flex justify-center">
@@ -119,6 +132,7 @@ const LogInForm: React.FC = () => {
             Log In
           </button>
         </div>
+        {logInErrors && <div>{logInErrorList}</div>}
       </form>
     </div>
   );
