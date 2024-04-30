@@ -84,7 +84,7 @@ const CreateWindow: React.FC<InnerWindowProps> = (props: InnerWindowProps) => {
   const createPostErrorsList = createPostErrors.map((error, index) => {
     return (
       <p
-        className="max m-2 bg-red-500/50 p-1 text-center text-lg text-zinc-50"
+        className="max m-2 bg-site-pink/50 p-1 text-center text-lg text-white"
         key={index}
       >
         {error}
@@ -135,7 +135,7 @@ const CreateWindow: React.FC<InnerWindowProps> = (props: InnerWindowProps) => {
       <textarea
         placeholder="Please type your message here"
         rows={4}
-        className="m-2 bg-zinc-50 p-1 text-black"
+        className="m-2 bg-white p-1 text-black"
         value={message}
         onChange={(e) => {
           setMessage(e.target.value);
@@ -144,8 +144,8 @@ const CreateWindow: React.FC<InnerWindowProps> = (props: InnerWindowProps) => {
       <div
         className={
           message.length < 1 || message.length > 500
-            ? "mr-2 text-right text-lg text-red-600"
-            : "mr-2 text-right text-lg text-zinc-50"
+            ? "mr-2 text-right text-lg text-site-red"
+            : "mr-2 text-right text-lg text-white"
         }
       >
         {message.length}/500
@@ -156,7 +156,7 @@ const CreateWindow: React.FC<InnerWindowProps> = (props: InnerWindowProps) => {
           disabled={
             createPost.isLoading || message.length < 1 || message.length > 500
           }
-          className="rounded-lg border-2 border-zinc-50 bg-zinc-800 p-1 text-lg hover:bg-gradient-to-br hover:from-zinc-800 hover:to-pink-800"
+          className="rounded-lg border-2 border-white bg-site-gray-dark p-1 text-lg hover:bg-gradient-to-br hover:from-site-gray-dark hover:to-site-pink"
         >
           Submit
         </button>

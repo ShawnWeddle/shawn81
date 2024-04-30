@@ -48,7 +48,7 @@ const SignUpForm: React.FC = () => {
   const signUpErrorList = signUpErrors.map((error, index) => {
     return (
       <p
-        className="max m-2 bg-red-500/50 text-center text-lg text-zinc-50"
+        className="max m-2 bg-red-500/50 text-center text-lg text-white"
         key={index}
       >
         {error}
@@ -60,29 +60,29 @@ const SignUpForm: React.FC = () => {
     <div className="flex justify-center">
       <form
         onSubmit={handleSubmit}
-        className="bg-zinc-800 sm:m-4 sm:max-w-xl sm:rounded sm:border-2 sm:border-zinc-50"
+        className="bg-site-gray-dark sm:m-4 sm:max-w-xl sm:rounded sm:border-2 sm:border-white"
       >
-        <p className="mt-2 text-center text-4xl text-zinc-50">SIGN UP</p>
+        <p className="mt-2 text-center text-4xl text-white">SIGN UP</p>
         <div className="m-5 grid grid-cols-2">
-          <p className="text-lg text-zinc-50">Username</p>
+          <p className="text-lg text-white">Username</p>
           <input
-            className="my-1 rounded-md border-2 border-zinc-50 bg-zinc-800 text-zinc-50"
+            className="my-1 rounded-md border-2 border-white bg-site-gray-dark text-white"
             type="text"
             placeholder=" Enter username"
             onChange={(e) => setUsername(e.target.value)}
             value={username}
           />
-          <p className="text-lg text-zinc-50">Password</p>
+          <p className="text-lg text-white">Password</p>
           <input
-            className="my-1 rounded-md border-2 border-zinc-50 bg-zinc-800 text-zinc-50"
+            className="my-1 rounded-md border-2 border-white bg-site-gray-dark text-white"
             type={showPassword ? "text" : "password"}
             placeholder=" Enter password"
             onChange={(e) => setPassword(e.target.value)}
             value={password}
           />
-          <p className="text-lg text-zinc-50">Confirm Password</p>
+          <p className="text-lg text-white">Confirm Password</p>
           <input
-            className="my-1 rounded-md border-2 border-zinc-50 bg-zinc-800 text-zinc-50"
+            className="my-1 rounded-md border-2 border-white bg-site-gray-dark text-white"
             type={showPassword ? "text" : "password"}
             placeholder=" Confirm password "
             onChange={(e) => setPasswordConfirmation(e.target.value)}
@@ -105,7 +105,7 @@ const SignUpForm: React.FC = () => {
             />
             <label
               htmlFor="sign-up-show-password-input"
-              className="text-sm text-zinc-100"
+              className="text-sm text-white"
             >
               Show Password
             </label>
@@ -114,10 +114,10 @@ const SignUpForm: React.FC = () => {
         <div className="flex justify-center">
           {isSignedUp ? (
             <div>
-              <p className="max m-2 text-center text-lg text-zinc-50">
+              <p className="max m-2 text-center text-lg text-white">
                 Thank you for signing up!
               </p>
-              <p className="max m-2 text-center text-lg text-zinc-50">
+              <p className="max m-2 text-center text-lg text-white">
                 Please Log In to post a message
               </p>
             </div>
@@ -125,7 +125,7 @@ const SignUpForm: React.FC = () => {
             <button
               type="submit"
               disabled={registerUser.isLoading}
-              className="mb-2 rounded-lg border-2 border-zinc-50 bg-zinc-800 p-1 text-lg text-zinc-50 hover:bg-gradient-to-br hover:from-zinc-800 hover:to-blue-800"
+              className="mb-2 rounded-lg border-2 border-white bg-site-gray-dark p-1 text-lg text-white hover:bg-gradient-to-br hover:from-site-gray-dark hover:to-site-blue"
             >
               Sign Up
             </button>

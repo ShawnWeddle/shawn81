@@ -47,8 +47,8 @@ const MainCell: React.FC<MainCellProps> = (props: MainCellProps) => {
       }}
       className={
         props.postProperties.id === "NoID"
-          ? "flex aspect-square items-center justify-center rounded bg-zinc-800 hover:bg-gradient-to-br hover:from-zinc-800 hover:to-pink-800"
-          : "flex aspect-square items-center justify-center rounded bg-zinc-700 hover:bg-gradient-to-br hover:from-zinc-800 hover:to-blue-800"
+          ? "flex aspect-square items-center justify-center rounded bg-site-gray-dark hover:bg-gradient-to-br hover:from-site-gray-dark hover:to-site-pink"
+          : "flex aspect-square items-center justify-center rounded bg-site-gray-med hover:bg-gradient-to-br hover:from-site-gray-dark hover:to-site-blue"
       }
     >
       {props.postProperties.location}

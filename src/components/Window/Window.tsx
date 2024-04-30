@@ -10,7 +10,7 @@ const Window: React.FC = () => {
   const { postState, postDispatch } = usePostContext();
   const { authState, authDispatch } = useAuthContext();
   return (
-    <div className="w-full gap-1 bg-zinc-800 p-1 text-zinc-50 sm:m-4 sm:max-w-xl sm:rounded lg:max-w-md lg:bg-zinc-700">
+    <div className="w-full gap-1 bg-site-gray-dark p-1 text-white sm:m-4 sm:max-w-xl sm:rounded lg:max-w-md lg:bg-site-gray-med">
       {postState.windowMode === "rules" && <RulesWindow />}
       {postState.windowMode === "create" &&
         postState.activePost &&

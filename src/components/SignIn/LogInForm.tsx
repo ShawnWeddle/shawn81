@@ -58,10 +58,10 @@ const LogInForm: React.FC = () => {
     return (
       <div className="flex justify-center">
         <div>
-          <p className="m-4 max-w-md text-center text-4xl text-zinc-50">
+          <p className="m-4 max-w-md text-center text-4xl text-white">
             {user.username}
           </p>
-          <p className="max-w-sm text-xl text-zinc-50">
+          <p className="max-w-sm text-xl text-white">
             It appears you are already logged in as {user.username}. If you
             would like to log in under a different account, please log out
             first.
@@ -74,7 +74,7 @@ const LogInForm: React.FC = () => {
   const logInErrorList = logInErrors.map((error, index) => {
     return (
       <p
-        className="max m-2 bg-red-500/50 text-center text-lg text-zinc-50"
+        className="max m-2 bg-red-500/50 text-center text-lg text-white"
         key={index}
       >
         {error}
@@ -86,21 +86,21 @@ const LogInForm: React.FC = () => {
     <div className="flex justify-center">
       <form
         onSubmit={handleSubmit}
-        className="bg-zinc-800 sm:m-4 sm:max-w-xl sm:rounded sm:border-2 sm:border-zinc-50"
+        className="bg-site-gray-dark sm:m-4 sm:max-w-xl sm:rounded sm:border-2 sm:border-white"
       >
-        <p className="mt-2 text-center text-4xl text-zinc-50">LOG IN</p>
+        <p className="mt-2 text-center text-4xl text-white">LOG IN</p>
         <div className="m-5 grid grid-cols-2">
-          <p className="text-lg text-zinc-50">Username</p>
+          <p className="text-lg text-white">Username</p>
           <input
-            className="my-1 rounded-md border-2 border-zinc-50 bg-zinc-800 text-zinc-50"
+            className="my-1 rounded-md border-2 border-white bg-site-gray-dark text-white"
             type="text"
             placeholder=" Enter username"
             onChange={(e) => setUsername(e.target.value)}
             value={username}
           />
-          <p className="text-lg text-zinc-50">Password</p>
+          <p className="text-lg text-white">Password</p>
           <input
-            className="my-1 rounded-md border-2 border-zinc-50 bg-zinc-800 text-zinc-50"
+            className="my-1 rounded-md border-2 border-white bg-site-gray-dark text-white"
             type={showPassword ? "text" : "password"}
             placeholder=" Enter password"
             onChange={(e) => setPassword(e.target.value)}
@@ -120,14 +120,14 @@ const LogInForm: React.FC = () => {
                 }
               }}
             />
-            <p className="text-sm text-zinc-100">Show Password</p>
+            <p className="text-sm text-white">Show Password</p>
           </div>
         </div>
         <div className="flex justify-center">
           <button
             type="submit"
             disabled={logInUser.isLoading}
-            className="mb-2 rounded-lg border-2 border-zinc-50 bg-zinc-800 p-1 text-lg text-zinc-50 hover:bg-gradient-to-br hover:from-zinc-800 hover:to-blue-800"
+            className="mb-2 rounded-lg border-2 border-white bg-site-gray-dark p-1 text-lg text-white hover:bg-gradient-to-br hover:from-site-gray-dark hover:to-site-blue"
           >
             Log In
           </button>

@@ -9,10 +9,10 @@ const UsernameButton: React.FC<UsernameButtonProps> = (
 ) => {
   return (
     <>
-      <button className="rounded-lg border-2 border-zinc-50 bg-gradient-to-br from-blue-800 via-purple-800 to-pink-800 p-1 text-2xl text-zinc-50 hover:bg-gradient-to-br hover:from-zinc-800 hover:to-blue-800 sm:hidden">
+      <button className="rounded-lg border-2 border-white bg-site-gray-dark p-1 text-2xl text-white hover:bg-gradient-to-br hover:from-site-gray-dark hover:to-site-blue sm:hidden">
         <IoPerson />
       </button>
-      <button className=" hidden rounded-lg border-2 border-zinc-50 bg-gradient-to-br from-blue-800 via-purple-800 to-pink-800 p-1 text-2xl text-zinc-50 hover:bg-gradient-to-br hover:from-zinc-800 hover:to-blue-800 sm:block sm:text-3xl">
+      <button className="hidden rounded-lg border-2 border-white bg-site-gray-dark p-1 text-2xl text-white hover:bg-gradient-to-br hover:from-site-gray-dark hover:to-site-blue sm:block sm:text-3xl">
         {props.username}
       </button>
     </>

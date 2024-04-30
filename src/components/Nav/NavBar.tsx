@@ -6,12 +6,12 @@ import UsernameButton from "./UsernameButton";
 import { useAuthContext } from "~/hooks/useAuthContext";
 
 const NavBar: React.FC = () => {
-  const { authState, authDispatch } = useAuthContext();
+  const { authState } = useAuthContext();
   const user = authState.user;
   const username = user ? user.username : "";
 
   return (
-    <nav className="flex justify-between bg-zinc-700">
+    <nav className="flex justify-between bg-site-gray-med">
       <div className="m-4">
         <MainLogo />
       </div>

@@ -5,7 +5,9 @@ const SignUpButton: React.FC = () => {
   return (
     <button
       onClick={() => void router.push("/signup")}
-      className="rounded-lg border-2 border-zinc-50 bg-zinc-800 p-1 text-2xl text-zinc-50 hover:bg-gradient-to-br hover:from-zinc-800 hover:to-blue-800 sm:text-3xl"
+      className="rounded-lg border-2 border-white bg-site-gray-dark
+       p-1 text-2xl text-white hover:bg-gradient-to-br hover:from-site-gray-dark
+       hover:to-site-blue sm:text-3xl"
     >
       Sign Up
     </button>

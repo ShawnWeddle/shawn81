@@ -3,7 +3,7 @@ const RulesWindow: React.FC = () => {
     <div className="flex flex-col">
       <p className="m-2 text-center text-2xl">
         Thank you for visiting{" "}
-        <span className="text-blue-600">shawn81.com!</span>
+        <span className="text-site-blue">shawn81.com!</span>
       </p>
       <p className="mx-4 my-2">
         This website displays up to eighty-one (81) messages at a time.

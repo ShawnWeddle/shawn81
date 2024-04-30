@@ -57,7 +57,7 @@ const DisplayWindow: React.FC<InnerWindowProps> = (props: InnerWindowProps) => {
     <form className="flex flex-col" onSubmit={handleSubmit}>
       <div className="mx-4 my-2 flex justify-between text-2xl">
         <span>{activePost.location}</span>
-        <span>{activePost.username}</span>
+        <span className="text-site-blue">{activePost.username}</span>
         <button
           type="button"
           onClick={() => {
@@ -74,9 +74,7 @@ const DisplayWindow: React.FC<InnerWindowProps> = (props: InnerWindowProps) => {
           ✕
         </button>
       </div>
-      <div className="m-2 bg-zinc-700 p-1 text-zinc-50">
-        {activePost.message}
-      </div>
+      <div className="m-2 p-1 text-white">{activePost.message}</div>
       {activePost.username === user?.username && !isDeletingPost && (
         <div className="flex justify-center gap-2">
           <button
@@ -90,7 +88,7 @@ const DisplayWindow: React.FC<InnerWindowProps> = (props: InnerWindowProps) => {
                 },
               });
             }}
-            className="rounded-lg border-2 border-zinc-50 bg-zinc-800 p-1 text-lg hover:bg-gradient-to-br hover:from-zinc-800 hover:to-blue-800"
+            className="rounded-lg border-2 border-white bg-site-gray-dark p-1 text-lg hover:bg-gradient-to-br hover:from-site-gray-dark hover:to-site-blue"
           >
             Edit
           </button>
@@ -98,7 +96,7 @@ const DisplayWindow: React.FC<InnerWindowProps> = (props: InnerWindowProps) => {
             onClick={() => {
               setIsDeletingPost(true);
             }}
-            className="rounded-lg border-2 border-zinc-50 bg-zinc-800 p-1 text-lg hover:bg-gradient-to-br hover:from-zinc-800 hover:to-red-800"
+            className="rounded-lg border-2 border-white bg-site-gray-dark p-1 text-lg hover:bg-gradient-to-br hover:from-site-gray-dark hover:to-site-red"
           >
             Delete
           </button>
@@ -114,7 +112,7 @@ const DisplayWindow: React.FC<InnerWindowProps> = (props: InnerWindowProps) => {
               onClick={() => {
                 setIsDeletingPost(false);
               }}
-              className="rounded-lg border-2 border-zinc-50 bg-zinc-800 p-1 text-lg hover:bg-gradient-to-br hover:from-zinc-800 hover:to-blue-800"
+              className="rounded-lg border-2 border-white bg-site-gray-dark p-1 text-lg hover:bg-gradient-to-br hover:from-site-gray-dark hover:to-site-blue"
             >
               Cancel
             </button>
@@ -122,7 +120,7 @@ const DisplayWindow: React.FC<InnerWindowProps> = (props: InnerWindowProps) => {
               onClick={() => {
                 handleDelete();
               }}
-              className="rounded-lg border-2 border-zinc-50 bg-zinc-800 p-1 text-lg hover:bg-gradient-to-br hover:from-zinc-800 hover:to-red-800"
+              className="rounded-lg border-2 border-white bg-site-gray-dark p-1 text-lg hover:bg-gradient-to-br hover:from-site-gray-dark hover:to-site-red"
             >
               Delete
             </button>
