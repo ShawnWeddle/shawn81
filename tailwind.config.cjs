@@ -20,13 +20,13 @@ const config = {
     keyframes: {
       flash1: {
         "0%": {backgroundColor: "#242626",},
-        "50%": {backgroundColor: "#99598E",},
+        "50%": {backgroundColor: "#45454D",},
         "100%": {backgroundColor: "#242626",},
       },
       flash2: {
-        "0%": {backgroundColor: "#006666",},
+        "0%": {backgroundColor: "#45454D",},
         "50%": {backgroundColor: "#242626",},
-        "100%": {backgroundColor: "#006666",},
+        "100%": {backgroundColor: "#45454D",},
       }
     },
     extend: {
